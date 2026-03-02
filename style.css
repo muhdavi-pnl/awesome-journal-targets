@@ -1,0 +1,23 @@
+.dataTables_info {
+    display: none;
+}
+
+.dataTables_filter {
+    float: right;
+}
+
+.w-tanggal {
+    width: 150px;
+}
+.w-sesi {
+    width: 120px;
+}
+
+@media screen and (max-width: 768px) {
+    .prodi {
+        font-size: .8rem;
+    }
+    .w-tanggal {
+        width: 100px;
+    }
+}
