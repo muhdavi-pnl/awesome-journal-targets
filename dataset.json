@@ -22,7 +22,7 @@
 			"Sinta 3",
 			"2028 - Vol 9 No 4",
 			"<a href='https://ejurnal.seminar-id.com/index.php/bits/' target='_blank'>Jurnal Seminar Indonesia</a>",
-			"IDR 750.000"
+			"750.000"
 		],
 		[
 			"International Journal of Electrical and Computer Engineering",
@@ -45,7 +45,7 @@
 			"June, December",
 			"Sinta 2",
 			"2027 - Vol 12 No 2",
-			"<a href='https://join.if.uinsgd.ac.id/index.php/join' target='_blank'>Department of Informatics, UINSGD</a>",
+			"<a href='https://join.if.uinsgd.ac.id/index.php/join' target='_blank'>Dept. of Informatics, UINSGD</a>",
 			"5,000,000"
 		],
 		[
@@ -64,15 +64,15 @@
 			"<a href='https://journal.binus.ac.id/index.php/comtech' target='_blank'>BINUS Journal</a>",
 			"2,000,000"
 		],
-  [
+  		[
 			"IJAI (Indonesian Journal of Applied Informatics)",
-			" May,November",
+			"May, November",
 			"Sinta 4",
 			"2025 - Vol 10 No 1",
 			"<a href='https://jurnal.uns.ac.id/ijai/index' target='_blank'>Jurnal IJAI</a>",
 			"3.000.000"
 		],
-  [
+  		[
 			"(IJCSAM) International Journal of Computing Science and Applied Mathematics",
 			"April, August, December",
 			"Sinta 2",
@@ -80,5 +80,5 @@
 			"<a href='https://journal.its.ac.id/index.php/ijcsam' target='_blank'>IJCSAM Journal</a>",
 			"1,000,000"
 		]
-  ]
+  	]
 }
