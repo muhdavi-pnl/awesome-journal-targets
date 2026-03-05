@@ -22,7 +22,7 @@
 			"Sinta 3",
 			"2028 - Vol 9 No 4",
 			"<a href='https://ejurnal.seminar-id.com/index.php/bits/' target='_blank'>Jurnal Seminar Indonesia</a>",
-			"750.000"
+			"IDR 750.000"
 		],
 		[
 			"International Journal of Electrical and Computer Engineering",
@@ -45,7 +45,7 @@
 			"June, December",
 			"Sinta 2",
 			"2027 - Vol 12 No 2",
-			"<a href='https://join.if.uinsgd.ac.id/index.php/join' target='_blank'>Dept. of Informatics, UINSGD</a>",
+			"<a href='https://join.if.uinsgd.ac.id/index.php/join' target='_blank'>Department of Informatics, UINSGD</a>",
 			"5,000,000"
 		],
 		[
@@ -64,20 +64,28 @@
 			"<a href='https://journal.binus.ac.id/index.php/comtech' target='_blank'>BINUS Journal</a>",
 			"2,000,000"
 		],
-  	[
+	[
+			"JUSIFOR : Jurnal Sistem Informasi dan Informatika",
+			"June, December",
+			"Sinta 4",
+			"2025 - Vol 4 No 2",
+			"<a href='https://ejournal.uniramalang.ac.id/index.php/jusifor' target='_blank'>UNIRA Malang</a>",
+			"0"
+		],
+		[
 			"JOIV : International Journal on Informatics Visualization",
 			"March, June, September, December",
 			"Sinta 2 & Scopus Q4",
 			"2027 - Vol 11 No 1",
 			"<a href='http://www.joiv.org/index.php/joiv' target='_blank'>Publikasi Ilmiah IT, Politeknik Negeri Padang</a>",
 			"4,500,000"
-    ],
-    [
+		],
+		[
 			"IJAI (Indonesian Journal of Applied Informatics)",
-			"May, November",
+			" May,November",
 			"Sinta 4",
-			"2025 - Vol 10 No 1",
-			"<a href='https://jurnal.uns.ac.id/ijai/index' target='_blank'>Jurnal IJAI</a>",
+			"2025 - Vol 5 No 2",
+			"<a href='https://jurnal.uns.ac.id/ijai' target='_blank'>Jurnal IJAI</a>",
 			"3.000.000"
 		],
     [
@@ -88,6 +96,28 @@
 			"<a href='https://jurnal.iaii.or.id/index.php/RESTI' target='_blank'>Jurnal RESTI</a>",
 			"5,000,000"
     ],
+ ]
+			"Jurnal Teknologi Informasi dan Ilmu Komputer (JTIIK)",
+			"February, April, June, August, October, December",
+			"Sinta 2",
+			"2026 - Vol 13 No 1",
+			"<a href='https://jtiik.ub.ac.id/index.php/jtiik/index' target='_blank'>Jurnal UB</a>",
+			"1,000,000"
+		],
+		[
+			"IJCCS (Indonesian Journal of Computing and Cybernetics Systems)",
+			" January,April,July,October",
+			"Sinta 2",
+			"2025 - Vol 19 No 4",
+			"<a href='https://journal.ugm.ac.id/ijccs/index' target='_blank'>Jurnal IJCCS</a>",
+			"10.000.000"
+    [
+		  "PETIK : (Jurnal Pengabdian Teknik dan Ilmu Komputer)",
+			"June, Desember",
+			"Sinta 3",
+			"2025 - Vol 10 No 1",
+			"<a href='https://ojs.unikom.ac.id/index.php/petik' target='_blank'>Jurnal UNIKOM</a>",
+      ],
     [
 			"(IJCSAM) International Journal of Computing Science and Applied Mathematics",
 			"April, August, December",
@@ -95,6 +125,14 @@
 			"2027 - Vol 13 No 1",
 			"<a href='https://journal.its.ac.id/index.php/ijcsam' target='_blank'>IJCSAM Journal</a>",
 			"1,000,000"
+		],
+		[
+			"Mantik (Indonesian Journal of Applied Informatics)",
+			"May, November",
+			"Sinta 4",
+			"2020 - Vol 4 No 3",
+			"<a href='https://https://iocscience.org/ejournal/index.php/mantik/ijai' target='_blank'>Jurnal Mantik</a>",
+			"0"
 		]
   ]
 }
