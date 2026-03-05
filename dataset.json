@@ -22,7 +22,15 @@
 			"Sinta 3",
 			"2028 - Vol 9 No 4",
 			"<a href='https://ejurnal.seminar-id.com/index.php/bits/' target='_blank'>Jurnal Seminar Indonesia</a>",
-			"750,000"
+			"IDR 750.000"
+		],
+		[
+			"International Journal of Electrical and Computer Engineering",
+			"February, April, June, August, October, December",
+			"Sinta 1/Q3",
+			"2026 - Vol 16, No 1",
+			"<a href='https://ijece.iaescore.com/index.php/IJECE' target='_blank'>IAES Journal</a>",
+			"215.00"
 		],
 		[
 			"Data Science: Journal of Computing and Applied Informatics (JoCAI) ",
@@ -55,6 +63,14 @@
 			"2027 - Vol 18 No 1",
 			"<a href='https://journal.binus.ac.id/index.php/comtech' target='_blank'>BINUS Journal</a>",
 			"2,000,000"
+		],
+  [
+			"IJAI (Indonesian Journal of Applied Informatics)",
+			" May,November",
+			"Sinta 4",
+			"2025 - Vol 10 No 1",
+			"<a href='https://jurnal.uns.ac.id/ijai/index' target='_blank'>Jurnal IJAI</a>",
+			"3.000.000"
 		]
   ]
 }
