@@ -89,6 +89,28 @@ body {
     backdrop-filter: blur(4px);
 }
 
+.stat-button {
+    appearance: none;
+    width: 100%;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-button:hover,
+.stat-button:focus-visible {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.stat-button.is-active {
+    background: rgba(239, 111, 75, 0.22);
+    border-color: rgba(255, 228, 215, 0.88);
+}
+
 .stat span {
     display: block;
     font-size: clamp(1.25rem, 2.8vw, 1.8rem);
@@ -119,8 +141,19 @@ body {
     margin: 0 0 1.2rem;
     display: flex;
     justify-content: space-between;
-    align-items: end;
+    align-items: center;
     gap: 0.9rem;
+}
+
+.scope-label {
+    margin: 0;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #f3f9f8;
+    color: #28584f;
+    font-size: 0.8rem;
+    font-weight: 700;
 }
 
 .view-toggle {
@@ -190,7 +223,7 @@ body {
 
 .journal-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     gap: 0.95rem;
 }
 
@@ -249,6 +282,43 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0.7rem;
+    flex-wrap: wrap;
+}
+
+.page-buttons {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.page-number {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: var(--text);
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.page-number:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+}
+
+.page-number.is-active {
+    background: var(--primary);
+    color: #f4fffd;
+    border-color: var(--primary);
+}
+
+.page-ellipsis {
+    color: var(--muted);
+    padding: 0 0.2rem;
 }
 
 .pagination button {
@@ -260,6 +330,11 @@ body {
     font: inherit;
     font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: var(--primary-soft);
 }
 
 .pagination button:disabled {
@@ -277,12 +352,53 @@ body {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 18px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    min-height: 245px;
+    padding: 0.9rem;
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 0.95rem;
+    min-height: 210px;
     box-shadow: 0 14px 30px rgba(20, 37, 34, 0.06);
     animation: fadeUp 0.5s ease both;
+    overflow: hidden;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.card-cover {
+    width: 100%;
+    height: 100%;
+    padding: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid #dde8e5;
+    background: linear-gradient(180deg, #f6faf9, #eef4f2);
+}
+
+.card-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+}
+
+.cover-fallback {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #5a756e;
+}
+
+.card-cover.no-cover {
+    background: linear-gradient(145deg, #f2f7f6, #edf3f1);
 }
 
 .journal-card h2 {
@@ -316,14 +432,66 @@ body {
     padding: 0.35rem 0.58rem;
 }
 
-.badge.accreditation {
-    color: #0f766e;
-    background: var(--primary-soft);
-}
+/* Sinta tiers — warm greens → yellows */
+.badge.accreditation.accr-sinta-1 { background: #14532d; color: #dcfce7; }
+.badge.accreditation.accr-sinta-2 { background: #166534; color: #bbf7d0; }
+.badge.accreditation.accr-sinta-3 { background: #15803d; color: #d1fae5; }
+.badge.accreditation.accr-sinta-4 { background: #ca8a04; color: #fef9c3; }
+.badge.accreditation.accr-sinta-5 { background: #b45309; color: #fef3c7; }
+.badge.accreditation.accr-sinta-6 { background: #92400e; color: #fde68a; }
+
+/* Scopus quartiles — blues → purples */
+.badge.accreditation.accr-q1 { background: #1e3a8a; color: #dbeafe; }
+.badge.accreditation.accr-q2 { background: #1d4ed8; color: #dbeafe; }
+.badge.accreditation.accr-q3 { background: #6d28d9; color: #ede9fe; }
+.badge.accreditation.accr-q4 { background: #7e22ce; color: #f3e8ff; }
+
+/* Fallback */
+.badge.accreditation.accr-default { color: #0f766e; background: var(--primary-soft); }
 
 .badge.expiry {
     color: #894528;
     background: #ffe7d4;
+}
+
+.rating {
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+}
+
+.rating-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.14rem;
+}
+
+.rating-star {
+    border: 0;
+    background: transparent;
+    color: #d39a2f;
+    font-size: 1.05rem;
+    line-height: 1;
+    padding: 0.08rem 0.12rem;
+    cursor: pointer;
+}
+
+.rating-star:hover,
+.rating-star:focus-visible {
+    color: #b87c17;
+}
+
+.rating-text {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.table-rating-cell .rating {
+    margin-top: 0;
 }
 
 .card-footer {
@@ -408,12 +576,22 @@ body {
     }
 
     .viewbar {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
         align-items: stretch;
     }
 
     .page-size-field {
         width: 100%;
+    }
+
+    .journal-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    .journal-card {
+        grid-template-columns: 130px 1fr;
+        min-height: 200px;
     }
 }
 
@@ -429,5 +607,13 @@ body {
 
     .journal-card {
         min-height: 220px;
+        grid-template-columns: 1fr;
+        padding: 0.8rem;
+    }
+
+    .card-cover {
+        height: auto;
+        aspect-ratio: 16 / 10;
+        padding: 0.65rem;
     }
 }

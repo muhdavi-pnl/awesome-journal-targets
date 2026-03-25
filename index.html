@@ -39,18 +39,18 @@
             </p>
 
             <div class="stats" id="statsBar">
-                <article class="stat">
+                <button type="button" class="stat stat-button is-active" id="totalStatBtn" aria-pressed="true">
                     <span id="totalCount">0</span>
                     <p>Total Journals</p>
-                </article>
-                <article class="stat">
-                    <span id="shownCount">0</span>
-                    <p>Currently Shown</p>
-                </article>
-                <article class="stat">
-                    <span id="accreditationCount">0</span>
-                    <p>Accreditation Groups</p>
-                </article>
+                </button>
+                <button type="button" class="stat stat-button" id="nationalStatBtn" aria-pressed="false">
+                    <span id="nationalCount">0</span>
+                    <p>National Accreditation</p>
+                </button>
+                <button type="button" class="stat stat-button" id="internationalStatBtn" aria-pressed="false">
+                    <span id="internationalCount">0</span>
+                    <p>International Accreditation</p>
+                </button>
             </div>
         </header>
 
@@ -74,6 +74,8 @@
                     <option value="name-desc">Journal Name (Z-A)</option>
                     <option value="apc-asc">APC (Low to High)</option>
                     <option value="apc-desc">APC (High to Low)</option>
+                    <option value="rating-desc">Rating (High to Low)</option>
+                    <option value="rating-asc">Rating (Low to High)</option>
                 </select>
             </label>
         </section>
@@ -84,6 +86,8 @@
                 <button type="button" class="view-btn" data-view="table" id="tableViewBtn">Table View</button>
             </div>
 
+            <p id="scopeLabel" class="scope-label">Scope: All Journals</p>
+
             <label class="field page-size-field">
                 <span>Rows Per Page</span>
                 <select id="pageSizeSelect">
@@ -91,6 +95,7 @@
                     <option value="9" selected>9</option>
                     <option value="12">12</option>
                     <option value="18">18</option>
+                    <option value="all">All</option>
                 </select>
             </label>
         </section>
@@ -107,6 +112,7 @@
                             <th>Accreditation</th>
                             <th>Accreditation Exp</th>
                             <th>APC</th>
+                            <th>Rating</th>
                             <th>Link</th>
                         </tr>
                     </thead>
@@ -116,6 +122,7 @@
 
             <nav id="pagination" class="pagination" aria-label="Journal pagination">
                 <button id="prevPageBtn" type="button">Previous</button>
+                <div id="pageButtons" class="page-buttons" role="group" aria-label="Page number buttons"></div>
                 <p id="pageMeta">Page 1 of 1</p>
                 <button id="nextPageBtn" type="button">Next</button>
             </nav>
@@ -124,267 +131,6 @@
         </main>
     </div>
 
-    <script>
-        const searchInput = document.getElementById('searchInput');
-        const accreditationFilter = document.getElementById('accreditationFilter');
-        const sortSelect = document.getElementById('sortSelect');
-        const journalList = document.getElementById('journalList');
-        const journalTableWrap = document.getElementById('journalTableWrap');
-        const journalTableBody = document.getElementById('journalTableBody');
-        const pageSizeSelect = document.getElementById('pageSizeSelect');
-        const pageMeta = document.getElementById('pageMeta');
-        const pagination = document.getElementById('pagination');
-        const prevPageBtn = document.getElementById('prevPageBtn');
-        const nextPageBtn = document.getElementById('nextPageBtn');
-        const cardViewBtn = document.getElementById('cardViewBtn');
-        const tableViewBtn = document.getElementById('tableViewBtn');
-        const emptyState = document.getElementById('emptyState');
-        const totalCount = document.getElementById('totalCount');
-        const shownCount = document.getElementById('shownCount');
-        const accreditationCount = document.getElementById('accreditationCount');
-
-        let journals = [];
-        let filteredJournals = [];
-        let currentPage = 1;
-        let currentView = 'card';
-        let pageSize = Number(pageSizeSelect.value);
-
-        function extractLink(linkHtml) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(linkHtml, 'text/html');
-            const anchor = doc.querySelector('a');
-
-            if (!anchor) {
-                return { href: '#', text: 'Visit Journal' };
-            }
-
-            return {
-                href: anchor.getAttribute('href') || '#',
-                text: anchor.textContent.trim() || 'Visit Journal',
-            };
-        }
-
-        function parseApcValue(apc) {
-            const match = apc.replace(/,/g, '').match(/[0-9]+(?:\.[0-9]+)?/);
-            return match ? Number(match[0]) : Number.POSITIVE_INFINITY;
-        }
-
-        function normalizeRows(rows) {
-            return rows.map((row) => {
-                const link = extractLink(row[4]);
-                return {
-                    journal: row[0],
-                    frequency: row[1],
-                    accreditation: row[2],
-                    accreditationExp: row[3],
-                    link,
-                    apc: row[5],
-                    apcValue: parseApcValue(row[5]),
-                };
-            });
-        }
-
-        function populateAccreditationFilter(items) {
-            const uniqueAccreditations = [...new Set(items.map((item) => item.accreditation))].sort((a, b) => a.localeCompare(b));
-
-            uniqueAccreditations.forEach((value) => {
-                const option = document.createElement('option');
-                option.value = value;
-                option.textContent = value;
-                accreditationFilter.appendChild(option);
-            });
-
-            accreditationCount.textContent = uniqueAccreditations.length;
-        }
-
-        function createCard(item) {
-            const article = document.createElement('article');
-            article.className = 'journal-card';
-
-            const title = document.createElement('h2');
-            title.textContent = item.journal;
-
-            const meta = document.createElement('p');
-            meta.className = 'meta';
-            meta.textContent = item.frequency;
-
-            const badges = document.createElement('div');
-            badges.className = 'badges';
-
-            const accreditationBadge = document.createElement('span');
-            accreditationBadge.className = 'badge accreditation';
-            accreditationBadge.textContent = item.accreditation;
-
-            const expBadge = document.createElement('span');
-            expBadge.className = 'badge expiry';
-            expBadge.textContent = item.accreditationExp;
-
-            badges.append(accreditationBadge, expBadge);
-
-            const footer = document.createElement('div');
-            footer.className = 'card-footer';
-
-            const apc = document.createElement('p');
-            apc.className = 'apc';
-            apc.innerHTML = `<span>APC</span> ${item.apc}`;
-
-            const link = document.createElement('a');
-            link.href = item.link.href;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.textContent = item.link.text;
-            link.className = 'journal-link';
-
-            footer.append(apc, link);
-            article.append(title, meta, badges, footer);
-
-            return article;
-        }
-
-        function createTableRow(item) {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.journal}</td>
-                <td>${item.frequency}</td>
-                <td>${item.accreditation}</td>
-                <td>${item.accreditationExp}</td>
-                <td>${item.apc}</td>
-                <td><a href="${item.link.href}" target="_blank" rel="noopener noreferrer">${item.link.text}</a></td>
-            `;
-            return row;
-        }
-
-        function setView(viewName) {
-            currentView = viewName;
-            cardViewBtn.classList.toggle('is-active', currentView === 'card');
-            tableViewBtn.classList.toggle('is-active', currentView === 'table');
-            renderPage();
-        }
-
-        function updatePagination(totalItems) {
-            const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-            currentPage = Math.min(currentPage, totalPages);
-            pageMeta.textContent = `Page ${currentPage} of ${totalPages}`;
-            prevPageBtn.disabled = currentPage <= 1;
-            nextPageBtn.disabled = currentPage >= totalPages;
-            pagination.hidden = totalItems === 0;
-        }
-
-        function renderPage() {
-            const start = (currentPage - 1) * pageSize;
-            const pageItems = filteredJournals.slice(start, start + pageSize);
-
-            journalList.hidden = currentView !== 'card';
-            journalTableWrap.hidden = currentView !== 'table';
-            journalList.innerHTML = '';
-            journalTableBody.innerHTML = '';
-
-            if (pageItems.length === 0) {
-                emptyState.hidden = false;
-                pagination.hidden = true;
-                return;
-            }
-
-            emptyState.hidden = true;
-
-            if (currentView === 'card') {
-                const cardFragment = document.createDocumentFragment();
-                pageItems.forEach((item) => cardFragment.appendChild(createCard(item)));
-                journalList.appendChild(cardFragment);
-            } else {
-                const rowFragment = document.createDocumentFragment();
-                pageItems.forEach((item) => rowFragment.appendChild(createTableRow(item)));
-                journalTableBody.appendChild(rowFragment);
-            }
-        }
-
-        function filterAndSort() {
-            const keyword = searchInput.value.trim().toLowerCase();
-            const accreditation = accreditationFilter.value;
-            const sort = sortSelect.value;
-
-            let filtered = journals.filter((item) => {
-                const byAccreditation = accreditation === 'all' || item.accreditation === accreditation;
-                const haystack = `${item.journal} ${item.frequency} ${item.accreditation} ${item.accreditationExp} ${item.link.text}`.toLowerCase();
-                const byKeyword = keyword.length === 0 || haystack.includes(keyword);
-                return byAccreditation && byKeyword;
-            });
-
-            filtered = filtered.sort((a, b) => {
-                if (sort === 'name-asc') {
-                    return a.journal.localeCompare(b.journal);
-                }
-                if (sort === 'name-desc') {
-                    return b.journal.localeCompare(a.journal);
-                }
-                if (sort === 'apc-asc') {
-                    return a.apcValue - b.apcValue;
-                }
-                return b.apcValue - a.apcValue;
-            });
-
-            filteredJournals = filtered;
-            shownCount.textContent = filteredJournals.length;
-            currentPage = 1;
-            updatePagination(filteredJournals.length);
-            renderPage();
-        }
-
-        async function initialize() {
-            try {
-                if (window.location.protocol === 'file:') {
-                    emptyState.hidden = false;
-                    emptyState.innerHTML = 'Local file mode blocks data loading in browsers. Start a local server and open <code>http://localhost:8000</code>. Example command: <code>python3 -m http.server 8000</code>.';
-                    pagination.hidden = true;
-                    return;
-                }
-
-                const response = await fetch('dataset.json');
-                const result = await response.json();
-                journals = normalizeRows(result.data || []);
-
-                totalCount.textContent = journals.length;
-                shownCount.textContent = journals.length;
-                populateAccreditationFilter(journals);
-                filterAndSort();
-            } catch (error) {
-                emptyState.hidden = false;
-                emptyState.textContent = 'Failed to load journal data. Please refresh the page.';
-                console.error('Failed to load journals:', error);
-            }
-        }
-
-        searchInput.addEventListener('input', filterAndSort);
-        accreditationFilter.addEventListener('change', filterAndSort);
-        sortSelect.addEventListener('change', filterAndSort);
-        pageSizeSelect.addEventListener('change', () => {
-            pageSize = Number(pageSizeSelect.value);
-            currentPage = 1;
-            updatePagination(filteredJournals.length);
-            renderPage();
-        });
-
-        prevPageBtn.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage -= 1;
-                updatePagination(filteredJournals.length);
-                renderPage();
-            }
-        });
-
-        nextPageBtn.addEventListener('click', () => {
-            const totalPages = Math.max(1, Math.ceil(filteredJournals.length / pageSize));
-            if (currentPage < totalPages) {
-                currentPage += 1;
-                updatePagination(filteredJournals.length);
-                renderPage();
-            }
-        });
-
-        cardViewBtn.addEventListener('click', () => setView('card'));
-        tableViewBtn.addEventListener('click', () => setView('table'));
-
-        initialize();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
