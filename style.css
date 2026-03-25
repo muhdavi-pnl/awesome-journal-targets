@@ -65,7 +65,7 @@ body {
     font-family: 'Fraunces', serif;
     font-size: clamp(1.8rem, 5vw, 3rem);
     line-height: 1.08;
-    max-width: 15ch;
+    white-space: nowrap;
 }
 
 .hero-subtitle {
@@ -183,11 +183,23 @@ body {
 }
 
 .page-size-field {
-    width: min(210px, 100%);
+    width: 160px;
 }
 
 .columns-field {
-    width: min(180px, 100%);
+    width: 150px;
+}
+
+.viewbar-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 0.6rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(24, 39, 35, 0.06);
 }
 
 .field {
@@ -246,7 +258,7 @@ body {
 .journal-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 1020px;
+    min-width: 820px;
 }
 
 .journal-table th,
@@ -271,6 +283,12 @@ body {
 
 .journal-table tbody tr:hover {
     background: #fbfefd;
+}
+
+.journal-table th:nth-child(4),
+.journal-table td:nth-child(4) {
+    text-align: right;
+    white-space: nowrap;
 }
 
 .journal-table a {
@@ -602,6 +620,10 @@ body {
 
     .columns-field {
         display: none;
+    }
+
+    .viewbar-group {
+        width: 100%;
     }
 
     .journal-grid {

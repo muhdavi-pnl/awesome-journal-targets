@@ -142,7 +142,9 @@ function parseExtras(row) {
     const extras = row.slice(6);
     let cover = null;
     let publisher = '';
+    let subject = '';
     let baseRating = 0;
+    const textValues = [];
 
     extras.forEach((value) => {
         if (typeof value !== 'string' && typeof value !== 'number') {
@@ -165,12 +167,12 @@ function parseExtras(row) {
             return;
         }
 
-        if (!publisher) {
-            publisher = stringValue;
-        }
+        textValues.push(stringValue);
     });
 
-    return { cover, publisher, baseRating };
+    [publisher = '', subject = ''] = textValues;
+
+    return { cover, publisher, subject, baseRating };
 }
 
 function accreditationColorClass(accreditation) {
@@ -210,6 +212,7 @@ function normalizeRows(rows) {
             apcValue: parseApcValue(row[5]),
             cover: extras.cover,
             publisher: extras.publisher,
+            subject: extras.subject,
             baseRating: extras.baseRating,
         };
     });
@@ -367,8 +370,6 @@ function createTableRow(item) {
     const row = document.createElement('tr');
     row.innerHTML = `
         <td>${item.journal}</td>
-        <td>${item.frequency}</td>
-        <td>${item.publisher || '-'}</td>
         <td><span class="badge accreditation ${accreditationColorClass(item.accreditation)}">${item.accreditation}</span></td>
         <td>${item.accreditationExp}</td>
         <td>${item.apc}</td>
@@ -492,7 +493,7 @@ function filterAndSort() {
             (heroScope === 'national' && isNationalJournal(item)) ||
             (heroScope === 'international' && isInternationalJournal(item));
         const byAccreditation = accreditation === 'all' || item.accreditation === accreditation;
-        const haystack = `${item.journal} ${item.frequency} ${item.publisher} ${item.accreditation} ${item.accreditationExp} ${item.link.text}`.toLowerCase();
+        const haystack = `${item.journal} ${item.frequency} ${item.publisher} ${item.subject} ${item.accreditation} ${item.accreditationExp} ${item.link.text}`.toLowerCase();
         const byKeyword = keyword.length === 0 || haystack.includes(keyword);
         return byHeroScope && byAccreditation && byKeyword;
     });
@@ -503,6 +504,12 @@ function filterAndSort() {
         }
         if (sort === 'name-desc') {
             return b.journal.localeCompare(a.journal);
+        }
+        if (sort === 'accreditation-asc') {
+            return a.accreditation.localeCompare(b.accreditation);
+        }
+        if (sort === 'accreditation-desc') {
+            return b.accreditation.localeCompare(a.accreditation);
         }
         if (sort === 'apc-asc') {
             return a.apcValue - b.apcValue;

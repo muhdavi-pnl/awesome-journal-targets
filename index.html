@@ -57,7 +57,7 @@
         <section class="controls" aria-label="Filter and sort journals">
             <label class="field">
                 <span>Search Journal</span>
-                <input id="searchInput" type="search" placeholder="Type journal name, frequency, or publisher..." autocomplete="off">
+                <input id="searchInput" type="search" placeholder="Type journal name, frequency, publisher, or subject..." autocomplete="off">
             </label>
 
             <label class="field">
@@ -72,6 +72,8 @@
                 <select id="sortSelect">
                     <option value="name-asc">Journal Name (A-Z)</option>
                     <option value="name-desc">Journal Name (Z-A)</option>
+                    <option value="accreditation-asc">Accreditation (A-Z)</option>
+                    <option value="accreditation-desc">Accreditation (Z-A)</option>
                     <option value="apc-asc">APC (Low to High)</option>
                     <option value="apc-desc">APC (High to Low)</option>
                     <option value="rating-desc">Rating (High to Low)</option>
@@ -88,24 +90,26 @@
 
             <p id="scopeLabel" class="scope-label">Scope: All Journals</p>
 
-            <label class="field columns-field">
-                <span>Desktop Columns</span>
-                <select id="columnCountSelect">
-                    <option value="2" selected>2 Columns</option>
-                    <option value="3">3 Columns</option>
-                </select>
-            </label>
+            <div class="viewbar-group">
+                <label class="field columns-field">
+                    <span>Desktop Columns</span>
+                    <select id="columnCountSelect">
+                        <option value="2" selected>2 Columns</option>
+                        <option value="3">3 Columns</option>
+                    </select>
+                </label>
 
-            <label class="field page-size-field">
-                <span>Rows Per Page</span>
-                <select id="pageSizeSelect">
-                    <option value="6">6</option>
-                    <option value="9" selected>9</option>
-                    <option value="12">12</option>
-                    <option value="18">18</option>
-                    <option value="all">All</option>
-                </select>
-            </label>
+                <label class="field page-size-field">
+                    <span>Rows Per Page</span>
+                    <select id="pageSizeSelect">
+                        <option value="6">6</option>
+                        <option value="9" selected>9</option>
+                        <option value="12">12</option>
+                        <option value="18">18</option>
+                        <option value="all">All</option>
+                    </select>
+                </label>
+            </div>
         </section>
 
         <main>
@@ -116,8 +120,6 @@
                     <thead>
                         <tr>
                             <th>Journal</th>
-                            <th>Frequency</th>
-                            <th>Publisher</th>
                             <th>Accreditation</th>
                             <th>Accreditation Exp</th>
                             <th>APC</th>
