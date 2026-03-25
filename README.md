@@ -23,3 +23,17 @@ Kontributor:
 22. Rizka Aziza: Mantik (Indonesian Journal of Applied Informatics)
 23. Syifa Angela
 24. Zahratul Khalish
+
+## Dataset Format
+```json
+[
+  [
+    "Journal Name",
+    "Frequency",
+    "Accreditation",
+    "Exp Date",
+    "<a href='...'>Link</a>",
+    "APC",
+    "https://example.com/cover-image.jpg"
+  ]
+]
