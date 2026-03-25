@@ -186,6 +186,10 @@ body {
     width: min(210px, 100%);
 }
 
+.columns-field {
+    width: min(180px, 100%);
+}
+
 .field {
     display: block;
 }
@@ -223,8 +227,12 @@ body {
 
 .journal-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.95rem;
+}
+
+.journal-grid.grid-three-columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .table-wrap {
@@ -592,8 +600,16 @@ body {
         width: 100%;
     }
 
+    .columns-field {
+        display: none;
+    }
+
     .journal-grid {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .journal-grid.grid-three-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .journal-card {
@@ -610,6 +626,11 @@ body {
 
     .hero {
         border-radius: 18px;
+    }
+
+    .journal-grid,
+    .journal-grid.grid-three-columns {
+        grid-template-columns: 1fr;
     }
 
     .journal-card {

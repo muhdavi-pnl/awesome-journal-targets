@@ -5,6 +5,7 @@ const journalList = document.getElementById('journalList');
 const journalTableWrap = document.getElementById('journalTableWrap');
 const journalTableBody = document.getElementById('journalTableBody');
 const pageSizeSelect = document.getElementById('pageSizeSelect');
+const columnCountSelect = document.getElementById('columnCountSelect');
 const pageMeta = document.getElementById('pageMeta');
 const pagination = document.getElementById('pagination');
 const prevPageBtn = document.getElementById('prevPageBtn');
@@ -25,11 +26,32 @@ let filteredJournals = [];
 let currentPage = 1;
 let currentView = 'card';
 let pageSize = pageSizeSelect.value === 'all' ? Number.POSITIVE_INFINITY : Number(pageSizeSelect.value);
+let desktopColumnCount = Number(columnCountSelect.value) || 2;
 let heroScope = 'all';
 let userSelectedView = false;
 const mobileViewMedia = window.matchMedia('(max-width: 767px)');
 const ratingStorageKey = 'journalRatings-v1';
+const desktopColumnStorageKey = 'journalDesktopColumns-v1';
 let journalRatings = {};
+
+function loadDesktopColumnCount() {
+    try {
+        const saved = Number(localStorage.getItem(desktopColumnStorageKey));
+        desktopColumnCount = saved === 3 ? 3 : 2;
+    } catch (error) {
+        desktopColumnCount = 2;
+    }
+
+    columnCountSelect.value = String(desktopColumnCount);
+}
+
+function saveDesktopColumnCount() {
+    try {
+        localStorage.setItem(desktopColumnStorageKey, String(desktopColumnCount));
+    } catch (error) {
+        console.error('Failed to save desktop columns:', error);
+    }
+}
 
 function loadRatings() {
     try {
@@ -71,6 +93,10 @@ function setJournalRating(item, ratingValue) {
 function syncViewButtons() {
     cardViewBtn.classList.toggle('is-active', currentView === 'card');
     tableViewBtn.classList.toggle('is-active', currentView === 'table');
+}
+
+function syncGridColumns() {
+    journalList.classList.toggle('grid-three-columns', desktopColumnCount === 3);
 }
 
 function extractLink(linkHtml) {
@@ -509,10 +535,12 @@ async function initialize() {
         const result = await response.json();
         journals = normalizeRows(result.data || []);
         loadRatings();
+        loadDesktopColumnCount();
 
         updateHeroStats(journals);
         populateAccreditationFilter(journals);
         currentView = mobileViewMedia.matches ? 'table' : 'card';
+        syncGridColumns();
         syncViewButtons();
         filterAndSort();
     } catch (error) {
@@ -530,6 +558,12 @@ pageSizeSelect.addEventListener('change', () => {
     currentPage = 1;
     updatePagination(filteredJournals.length);
     renderPage();
+});
+
+columnCountSelect.addEventListener('change', () => {
+    desktopColumnCount = Number(columnCountSelect.value) === 3 ? 3 : 2;
+    saveDesktopColumnCount();
+    syncGridColumns();
 });
 
 totalStatBtn.addEventListener('click', () => {
