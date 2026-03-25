@@ -5,6 +5,7 @@ const journalList = document.getElementById('journalList');
 const journalTableWrap = document.getElementById('journalTableWrap');
 const journalTableBody = document.getElementById('journalTableBody');
 const pageSizeSelect = document.getElementById('pageSizeSelect');
+const columnCountSelect = document.getElementById('columnCountSelect');
 const pageMeta = document.getElementById('pageMeta');
 const pagination = document.getElementById('pagination');
 const prevPageBtn = document.getElementById('prevPageBtn');
@@ -25,11 +26,32 @@ let filteredJournals = [];
 let currentPage = 1;
 let currentView = 'card';
 let pageSize = pageSizeSelect.value === 'all' ? Number.POSITIVE_INFINITY : Number(pageSizeSelect.value);
+let desktopColumnCount = Number(columnCountSelect.value) || 2;
 let heroScope = 'all';
 let userSelectedView = false;
 const mobileViewMedia = window.matchMedia('(max-width: 767px)');
 const ratingStorageKey = 'journalRatings-v1';
+const desktopColumnStorageKey = 'journalDesktopColumns-v1';
 let journalRatings = {};
+
+function loadDesktopColumnCount() {
+    try {
+        const saved = Number(localStorage.getItem(desktopColumnStorageKey));
+        desktopColumnCount = saved === 3 ? 3 : 2;
+    } catch (error) {
+        desktopColumnCount = 2;
+    }
+
+    columnCountSelect.value = String(desktopColumnCount);
+}
+
+function saveDesktopColumnCount() {
+    try {
+        localStorage.setItem(desktopColumnStorageKey, String(desktopColumnCount));
+    } catch (error) {
+        console.error('Failed to save desktop columns:', error);
+    }
+}
 
 function loadRatings() {
     try {
@@ -73,6 +95,10 @@ function syncViewButtons() {
     tableViewBtn.classList.toggle('is-active', currentView === 'table');
 }
 
+function syncGridColumns() {
+    journalList.classList.toggle('grid-three-columns', desktopColumnCount === 3);
+}
+
 function extractLink(linkHtml) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(linkHtml, 'text/html');
@@ -104,6 +130,51 @@ function parseRatingValue(value) {
     return Math.round(numeric);
 }
 
+function isCoverUrl(value) {
+    if (typeof value !== 'string') {
+        return false;
+    }
+    const trimmed = value.trim();
+    return /^https?:\/\//i.test(trimmed) && /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(trimmed);
+}
+
+function parseExtras(row) {
+    const extras = row.slice(6);
+    let cover = null;
+    let publisher = '';
+    let subject = '';
+    let baseRating = 0;
+    const textValues = [];
+
+    extras.forEach((value) => {
+        if (typeof value !== 'string' && typeof value !== 'number') {
+            return;
+        }
+
+        const stringValue = String(value).trim();
+        if (stringValue.length === 0) {
+            return;
+        }
+
+        if (!cover && isCoverUrl(stringValue)) {
+            cover = stringValue;
+            return;
+        }
+
+        const numericRating = Number(stringValue);
+        if (!Number.isNaN(numericRating) && numericRating >= 0 && numericRating <= 5) {
+            baseRating = parseRatingValue(numericRating);
+            return;
+        }
+
+        textValues.push(stringValue);
+    });
+
+    [publisher = '', subject = ''] = textValues;
+
+    return { cover, publisher, subject, baseRating };
+}
+
 function accreditationColorClass(accreditation) {
     const a = (accreditation || '').toLowerCase().trim();
     if (a === 'sinta 1') return 'accr-sinta-1';
@@ -130,6 +201,7 @@ function isInternationalJournal(item) {
 function normalizeRows(rows) {
     return rows.map((row) => {
         const link = extractLink(row[4]);
+        const extras = parseExtras(row);
         return {
             journal: row[0],
             frequency: row[1],
@@ -138,8 +210,10 @@ function normalizeRows(rows) {
             link,
             apc: row[5],
             apcValue: parseApcValue(row[5]),
-            cover: row[6] || null,
-            baseRating: parseRatingValue(row[7] || 0),
+            cover: extras.cover,
+            publisher: extras.publisher,
+            subject: extras.subject,
+            baseRating: extras.baseRating,
         };
     });
 }
@@ -252,6 +326,10 @@ function createCard(item) {
     meta.className = 'meta';
     meta.textContent = item.frequency;
 
+    const publisher = document.createElement('p');
+    publisher.className = 'publisher';
+    publisher.textContent = item.publisher ? `Publisher: ${item.publisher}` : 'Publisher: -';
+
     const badges = document.createElement('div');
     badges.className = 'badges';
 
@@ -282,7 +360,7 @@ function createCard(item) {
     const ratingControl = createRatingControl(item);
 
     footer.append(apc, link);
-    content.append(title, meta, badges, ratingControl, footer);
+    content.append(title, meta, publisher, badges, ratingControl, footer);
     article.append(coverContainer, content);
 
     return article;
@@ -292,7 +370,6 @@ function createTableRow(item) {
     const row = document.createElement('tr');
     row.innerHTML = `
         <td>${item.journal}</td>
-        <td>${item.frequency}</td>
         <td><span class="badge accreditation ${accreditationColorClass(item.accreditation)}">${item.accreditation}</span></td>
         <td>${item.accreditationExp}</td>
         <td>${item.apc}</td>
@@ -416,7 +493,7 @@ function filterAndSort() {
             (heroScope === 'national' && isNationalJournal(item)) ||
             (heroScope === 'international' && isInternationalJournal(item));
         const byAccreditation = accreditation === 'all' || item.accreditation === accreditation;
-        const haystack = `${item.journal} ${item.frequency} ${item.accreditation} ${item.accreditationExp} ${item.link.text}`.toLowerCase();
+        const haystack = `${item.journal} ${item.frequency} ${item.publisher} ${item.subject} ${item.accreditation} ${item.accreditationExp} ${item.link.text}`.toLowerCase();
         const byKeyword = keyword.length === 0 || haystack.includes(keyword);
         return byHeroScope && byAccreditation && byKeyword;
     });
@@ -427,6 +504,12 @@ function filterAndSort() {
         }
         if (sort === 'name-desc') {
             return b.journal.localeCompare(a.journal);
+        }
+        if (sort === 'accreditation-asc') {
+            return a.accreditation.localeCompare(b.accreditation);
+        }
+        if (sort === 'accreditation-desc') {
+            return b.accreditation.localeCompare(a.accreditation);
         }
         if (sort === 'apc-asc') {
             return a.apcValue - b.apcValue;
@@ -459,10 +542,12 @@ async function initialize() {
         const result = await response.json();
         journals = normalizeRows(result.data || []);
         loadRatings();
+        loadDesktopColumnCount();
 
         updateHeroStats(journals);
         populateAccreditationFilter(journals);
         currentView = mobileViewMedia.matches ? 'table' : 'card';
+        syncGridColumns();
         syncViewButtons();
         filterAndSort();
     } catch (error) {
@@ -480,6 +565,12 @@ pageSizeSelect.addEventListener('change', () => {
     currentPage = 1;
     updatePagination(filteredJournals.length);
     renderPage();
+});
+
+columnCountSelect.addEventListener('change', () => {
+    desktopColumnCount = Number(columnCountSelect.value) === 3 ? 3 : 2;
+    saveDesktopColumnCount();
+    syncGridColumns();
 });
 
 totalStatBtn.addEventListener('click', () => {

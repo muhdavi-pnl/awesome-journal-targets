@@ -65,7 +65,7 @@ body {
     font-family: 'Fraunces', serif;
     font-size: clamp(1.8rem, 5vw, 3rem);
     line-height: 1.08;
-    max-width: 15ch;
+    white-space: nowrap;
 }
 
 .hero-subtitle {
@@ -183,7 +183,23 @@ body {
 }
 
 .page-size-field {
-    width: min(210px, 100%);
+    width: 160px;
+}
+
+.columns-field {
+    width: 150px;
+}
+
+.viewbar-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 0.6rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(24, 39, 35, 0.06);
 }
 
 .field {
@@ -223,8 +239,12 @@ body {
 
 .journal-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.95rem;
+}
+
+.journal-grid.grid-three-columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .table-wrap {
@@ -238,7 +258,7 @@ body {
 .journal-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 900px;
+    min-width: 820px;
 }
 
 .journal-table th,
@@ -263,6 +283,12 @@ body {
 
 .journal-table tbody tr:hover {
     background: #fbfefd;
+}
+
+.journal-table th:nth-child(4),
+.journal-table td:nth-child(4) {
+    text-align: right;
+    white-space: nowrap;
 }
 
 .journal-table a {
@@ -414,6 +440,13 @@ body {
     font-size: 0.92rem;
 }
 
+.publisher {
+    margin: 0.35rem 0 0;
+    color: #3f5e56;
+    font-size: 0.84rem;
+    font-weight: 500;
+}
+
 .badges {
     margin: 0.9rem 0 0;
     display: flex;
@@ -432,19 +465,19 @@ body {
     padding: 0.35rem 0.58rem;
 }
 
-/* Sinta tiers — warm greens → yellows */
-.badge.accreditation.accr-sinta-1 { background: #14532d; color: #dcfce7; }
-.badge.accreditation.accr-sinta-2 { background: #166534; color: #bbf7d0; }
-.badge.accreditation.accr-sinta-3 { background: #15803d; color: #d1fae5; }
-.badge.accreditation.accr-sinta-4 { background: #ca8a04; color: #fef9c3; }
-.badge.accreditation.accr-sinta-5 { background: #b45309; color: #fef3c7; }
-.badge.accreditation.accr-sinta-6 { background: #92400e; color: #fde68a; }
+/* Sinta tiers */
+.badge.accreditation.accr-sinta-6 { background: #FF5722; color: #ffffff; }
+.badge.accreditation.accr-sinta-5 { background: #FF9800; color: #1f2937; }
+.badge.accreditation.accr-sinta-4 { background: #FFC107; color: #1f2937; }
+.badge.accreditation.accr-sinta-3 { background: #FFEB3B; color: #1f2937; }
+.badge.accreditation.accr-sinta-2 { background: #CDDC39; color: #1f2937; }
+.badge.accreditation.accr-sinta-1 { background: #8BC34A; color: #1f2937; }
 
-/* Scopus quartiles — blues → purples */
-.badge.accreditation.accr-q1 { background: #1e3a8a; color: #dbeafe; }
-.badge.accreditation.accr-q2 { background: #1d4ed8; color: #dbeafe; }
-.badge.accreditation.accr-q3 { background: #6d28d9; color: #ede9fe; }
-.badge.accreditation.accr-q4 { background: #7e22ce; color: #f3e8ff; }
+/* Scopus quartiles */
+.badge.accreditation.accr-q4 { background: #dd5a4e; color: #ffffff; }
+.badge.accreditation.accr-q3 { background: #fba353; color: #1f2937; }
+.badge.accreditation.accr-q2 { background: #e8d559; color: #1f2937; }
+.badge.accreditation.accr-q1 { background: #a4cf63; color: #1f2937; }
 
 /* Fallback */
 .badge.accreditation.accr-default { color: #0f766e; background: var(--primary-soft); }
@@ -585,8 +618,20 @@ body {
         width: 100%;
     }
 
+    .columns-field {
+        display: none;
+    }
+
+    .viewbar-group {
+        width: 100%;
+    }
+
     .journal-grid {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .journal-grid.grid-three-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .journal-card {
@@ -603,6 +648,11 @@ body {
 
     .hero {
         border-radius: 18px;
+    }
+
+    .journal-grid,
+    .journal-grid.grid-three-columns {
+        grid-template-columns: 1fr;
     }
 
     .journal-card {
