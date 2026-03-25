@@ -238,7 +238,7 @@ body {
 .journal-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 900px;
+    min-width: 1020px;
 }
 
 .journal-table th,
@@ -412,6 +412,13 @@ body {
     margin: 0.65rem 0 0;
     color: var(--muted);
     font-size: 0.92rem;
+}
+
+.publisher {
+    margin: 0.35rem 0 0;
+    color: #3f5e56;
+    font-size: 0.84rem;
+    font-weight: 500;
 }
 
 .badges {

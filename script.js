@@ -104,6 +104,49 @@ function parseRatingValue(value) {
     return Math.round(numeric);
 }
 
+function isCoverUrl(value) {
+    if (typeof value !== 'string') {
+        return false;
+    }
+    const trimmed = value.trim();
+    return /^https?:\/\//i.test(trimmed) && /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(trimmed);
+}
+
+function parseExtras(row) {
+    const extras = row.slice(6);
+    let cover = null;
+    let publisher = '';
+    let baseRating = 0;
+
+    extras.forEach((value) => {
+        if (typeof value !== 'string' && typeof value !== 'number') {
+            return;
+        }
+
+        const stringValue = String(value).trim();
+        if (stringValue.length === 0) {
+            return;
+        }
+
+        if (!cover && isCoverUrl(stringValue)) {
+            cover = stringValue;
+            return;
+        }
+
+        const numericRating = Number(stringValue);
+        if (!Number.isNaN(numericRating) && numericRating >= 0 && numericRating <= 5) {
+            baseRating = parseRatingValue(numericRating);
+            return;
+        }
+
+        if (!publisher) {
+            publisher = stringValue;
+        }
+    });
+
+    return { cover, publisher, baseRating };
+}
+
 function accreditationColorClass(accreditation) {
     const a = (accreditation || '').toLowerCase().trim();
     if (a === 'sinta 1') return 'accr-sinta-1';
@@ -130,6 +173,7 @@ function isInternationalJournal(item) {
 function normalizeRows(rows) {
     return rows.map((row) => {
         const link = extractLink(row[4]);
+        const extras = parseExtras(row);
         return {
             journal: row[0],
             frequency: row[1],
@@ -138,8 +182,9 @@ function normalizeRows(rows) {
             link,
             apc: row[5],
             apcValue: parseApcValue(row[5]),
-            cover: row[6] || null,
-            baseRating: parseRatingValue(row[7] || 0),
+            cover: extras.cover,
+            publisher: extras.publisher,
+            baseRating: extras.baseRating,
         };
     });
 }
@@ -252,6 +297,10 @@ function createCard(item) {
     meta.className = 'meta';
     meta.textContent = item.frequency;
 
+    const publisher = document.createElement('p');
+    publisher.className = 'publisher';
+    publisher.textContent = item.publisher ? `Publisher: ${item.publisher}` : 'Publisher: -';
+
     const badges = document.createElement('div');
     badges.className = 'badges';
 
@@ -282,7 +331,7 @@ function createCard(item) {
     const ratingControl = createRatingControl(item);
 
     footer.append(apc, link);
-    content.append(title, meta, badges, ratingControl, footer);
+    content.append(title, meta, publisher, badges, ratingControl, footer);
     article.append(coverContainer, content);
 
     return article;
@@ -293,6 +342,7 @@ function createTableRow(item) {
     row.innerHTML = `
         <td>${item.journal}</td>
         <td>${item.frequency}</td>
+        <td>${item.publisher || '-'}</td>
         <td><span class="badge accreditation ${accreditationColorClass(item.accreditation)}">${item.accreditation}</span></td>
         <td>${item.accreditationExp}</td>
         <td>${item.apc}</td>
@@ -416,7 +466,7 @@ function filterAndSort() {
             (heroScope === 'national' && isNationalJournal(item)) ||
             (heroScope === 'international' && isInternationalJournal(item));
         const byAccreditation = accreditation === 'all' || item.accreditation === accreditation;
-        const haystack = `${item.journal} ${item.frequency} ${item.accreditation} ${item.accreditationExp} ${item.link.text}`.toLowerCase();
+        const haystack = `${item.journal} ${item.frequency} ${item.publisher} ${item.accreditation} ${item.accreditationExp} ${item.link.text}`.toLowerCase();
         const byKeyword = keyword.length === 0 || haystack.includes(keyword);
         return byHeroScope && byAccreditation && byKeyword;
     });
