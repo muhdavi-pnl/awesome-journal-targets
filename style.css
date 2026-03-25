@@ -432,19 +432,19 @@ body {
     padding: 0.35rem 0.58rem;
 }
 
-/* Sinta tiers — warm greens → yellows */
-.badge.accreditation.accr-sinta-1 { background: #14532d; color: #dcfce7; }
-.badge.accreditation.accr-sinta-2 { background: #166534; color: #bbf7d0; }
-.badge.accreditation.accr-sinta-3 { background: #15803d; color: #d1fae5; }
-.badge.accreditation.accr-sinta-4 { background: #ca8a04; color: #fef9c3; }
-.badge.accreditation.accr-sinta-5 { background: #b45309; color: #fef3c7; }
-.badge.accreditation.accr-sinta-6 { background: #92400e; color: #fde68a; }
+/* Sinta tiers */
+.badge.accreditation.accr-sinta-6 { background: #FF5722; color: #ffffff; }
+.badge.accreditation.accr-sinta-5 { background: #FF9800; color: #1f2937; }
+.badge.accreditation.accr-sinta-4 { background: #FFC107; color: #1f2937; }
+.badge.accreditation.accr-sinta-3 { background: #FFEB3B; color: #1f2937; }
+.badge.accreditation.accr-sinta-2 { background: #CDDC39; color: #1f2937; }
+.badge.accreditation.accr-sinta-1 { background: #8BC34A; color: #1f2937; }
 
-/* Scopus quartiles — blues → purples */
-.badge.accreditation.accr-q1 { background: #1e3a8a; color: #dbeafe; }
-.badge.accreditation.accr-q2 { background: #1d4ed8; color: #dbeafe; }
-.badge.accreditation.accr-q3 { background: #6d28d9; color: #ede9fe; }
-.badge.accreditation.accr-q4 { background: #7e22ce; color: #f3e8ff; }
+/* Scopus quartiles */
+.badge.accreditation.accr-q4 { background: #dd5a4e; color: #ffffff; }
+.badge.accreditation.accr-q3 { background: #fba353; color: #1f2937; }
+.badge.accreditation.accr-q2 { background: #e8d559; color: #1f2937; }
+.badge.accreditation.accr-q1 { background: #a4cf63; color: #1f2937; }
 
 /* Fallback */
 .badge.accreditation.accr-default { color: #0f766e; background: var(--primary-soft); }
