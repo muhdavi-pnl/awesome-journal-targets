@@ -72,8 +72,8 @@
                 <select id="sortSelect">
                     <option value="name-asc">Journal Name (A-Z)</option>
                     <option value="name-desc">Journal Name (Z-A)</option>
-                    <option value="accreditation-asc">Accreditation (A-Z)</option>
-                    <option value="accreditation-desc">Accreditation (Z-A)</option>
+                    <option value="accreditation-asc">Accreditation (Low to High)</option>
+                    <option value="accreditation-desc">Accreditation (High to Low)</option>
                     <option value="apc-asc">APC (Low to High)</option>
                     <option value="apc-desc">APC (High to Low)</option>
                     <option value="rating-desc">Rating (High to Low)</option>
@@ -140,6 +140,40 @@
 
             <p id="emptyState" class="empty-state" hidden>No journals match your current filters.</p>
         </main>
+
+        <footer class="site-footer" aria-label="Site footer">
+            <section class="donation-panel" aria-labelledby="donationTitle">
+                <div class="donation-copy">
+                    <p class="footer-kicker">Support The Directory</p>
+                    <h2 id="donationTitle">Donation</h2>
+                    <p class="donation-text">
+                        If this journal target list helps your publication planning, you can support its maintenance and future updates.
+                    </p>
+                    <div class="donation-meta">
+                        <p class="donation-note">Scan QRIS or use one of the accounts below:</p>
+                        <ul class="donation-methods">
+                            <li><span>Bank BCA</span><strong>1234567890 a.n. Muhammad Davi</strong></li>
+                            <li><span>DANA</span><strong>0812-3456-7890</strong></li>
+                            <li><span>GoPay</span><strong>0812-3456-7890</strong></li>
+                        </ul>
+                        <a class="donation-link" href="https://saweria.co/your-donation-page" target="_blank" rel="noopener noreferrer">Open Donation Link</a>
+                    </div>
+                </div>
+
+                <figure class="donation-figure" aria-label="Donation QR figure">
+                    <div class="donation-card">
+                        <span class="donation-badge">QRIS Donation</span>
+                        <img src="img/qris-placeholder.svg" alt="QRIS donation code" class="donation-qr-image">
+                        <!--  <figcaption>Replace this file with your real QRIS image</figcaption>  -->
+                    </div>
+                </figure>
+            </section>
+
+            <div class="footer-bottom">
+                <p>Awesome Journal Targets</p>
+                <p>Built to simplify journal selection, accreditation review, and publication planning.</p>
+            </div>
+        </footer>
     </div>
 
     <script src="script.js"></script>
