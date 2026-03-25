@@ -1,23 +1,433 @@
-.dataTables_info {
-    display: none;
+:root {
+    --bg: #f4f6f2;
+    --surface: #ffffff;
+    --surface-soft: #f5fbfa;
+    --text: #112a24;
+    --muted: #4e6a62;
+    --primary: #0f766e;
+    --primary-soft: #d9f3ef;
+    --accent: #ef6f4b;
+    --ring: rgba(15, 118, 110, 0.25);
+    --border: #d7e1de;
+    --shadow: 0 16px 40px rgba(16, 34, 30, 0.12);
 }
 
-.dataTables_filter {
-    float: right;
+* {
+    box-sizing: border-box;
 }
 
-.w-tanggal {
-    width: 150px;
-}
-.w-sesi {
-    width: 120px;
+body {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--text);
+    background: radial-gradient(circle at 8% -10%, #ffdfcc 0%, transparent 36%),
+        radial-gradient(circle at 92% 8%, #d8f1ee 0%, transparent 38%),
+        var(--bg);
 }
 
-@media screen and (max-width: 768px) {
-    .prodi {
-        font-size: .8rem;
+.page-shell {
+    width: min(1200px, calc(100% - 2rem));
+    margin: 1.25rem auto 2rem;
+}
+
+.hero {
+    background: linear-gradient(140deg, #0f766e 0%, #155e75 60%, #1f4e5f 100%);
+    color: #f5fffd;
+    border-radius: 24px;
+    padding: clamp(1.2rem, 3vw, 2.2rem);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    animation: heroReveal 0.7s ease-out both;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    right: -80px;
+    top: -100px;
+    border-radius: 50%;
+    background: rgba(239, 111, 75, 0.18);
+}
+
+.hero-kicker {
+    margin: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    opacity: 0.92;
+}
+
+.hero h1 {
+    margin: 0.35rem 0 0;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    line-height: 1.08;
+    max-width: 15ch;
+}
+
+.hero-subtitle {
+    margin: 0.8rem 0 0;
+    max-width: 70ch;
+    color: #dbf8f1;
+}
+
+.stats {
+    margin-top: 1.2rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+
+.stat {
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 14px;
+    padding: 0.72rem 0.85rem;
+    backdrop-filter: blur(4px);
+}
+
+.stat span {
+    display: block;
+    font-size: clamp(1.25rem, 2.8vw, 1.8rem);
+    font-weight: 700;
+}
+
+.stat p {
+    margin: 0.1rem 0 0;
+    font-size: 0.82rem;
+    color: #e6fffb;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 0.9rem;
+    margin: 1rem 0 1.2rem;
+    padding: 0.95rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 12px 28px rgba(24, 39, 35, 0.08);
+    animation: fadeUp 0.55s ease-out both;
+    animation-delay: 0.1s;
+}
+
+.viewbar {
+    margin: 0 0 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 0.9rem;
+}
+
+.view-toggle {
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.2rem;
+    box-shadow: 0 10px 24px rgba(24, 39, 35, 0.08);
+}
+
+.view-btn {
+    border: 0;
+    border-radius: 9px;
+    padding: 0.52rem 0.8rem;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: transparent;
+    cursor: pointer;
+}
+
+.view-btn.is-active {
+    background: var(--primary);
+    color: #f4fffd;
+}
+
+.page-size-field {
+    width: min(210px, 100%);
+}
+
+.field {
+    display: block;
+}
+
+.field span {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin: 0 0 0.34rem;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 0.7rem 0.8rem;
+    font: inherit;
+    color: var(--text);
+    background: var(--surface-soft);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.field input::placeholder {
+    color: #7a928b;
+}
+
+.field input:focus,
+.field select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--ring);
+    background: #fff;
+}
+
+.journal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.95rem;
+}
+
+.table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: auto;
+    box-shadow: 0 14px 30px rgba(20, 37, 34, 0.07);
+}
+
+.journal-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.journal-table th,
+.journal-table td {
+    text-align: left;
+    padding: 0.72rem 0.8rem;
+    border-bottom: 1px solid #ebf1ef;
+    vertical-align: top;
+    font-size: 0.88rem;
+}
+
+.journal-table thead {
+    background: #f3f9f8;
+}
+
+.journal-table th {
+    color: #254740;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.journal-table tbody tr:hover {
+    background: #fbfefd;
+}
+
+.journal-table a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.journal-table a:hover,
+.journal-table a:focus-visible {
+    text-decoration: underline;
+}
+
+.pagination {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+}
+
+.pagination button {
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: var(--text);
+    border-radius: 10px;
+    padding: 0.45rem 0.72rem;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.pagination p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.journal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 245px;
+    box-shadow: 0 14px 30px rgba(20, 37, 34, 0.06);
+    animation: fadeUp 0.5s ease both;
+}
+
+.journal-card h2 {
+    margin: 0;
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    line-height: 1.28;
+}
+
+.meta {
+    margin: 0.65rem 0 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.badges {
+    margin: 0.9rem 0 0;
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.35rem 0.58rem;
+}
+
+.badge.accreditation {
+    color: #0f766e;
+    background: var(--primary-soft);
+}
+
+.badge.expiry {
+    color: #894528;
+    background: #ffe7d4;
+}
+
+.card-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 0.8rem;
+}
+
+.apc {
+    margin: 0;
+    font-weight: 700;
+    color: #18332d;
+    max-width: 58%;
+}
+
+.apc span {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.16rem;
+}
+
+.journal-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), #d85f3d);
+    border-radius: 10px;
+    padding: 0.5rem 0.68rem;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.journal-link:hover,
+.journal-link:focus-visible {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+}
+
+.empty-state {
+    margin: 1rem 0 0;
+    padding: 1rem;
+    border-radius: 14px;
+    background: #fff8f5;
+    border: 1px solid #ffddcf;
+    color: #803f27;
+}
+
+@keyframes heroReveal {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
     }
-    .w-tanggal {
-        width: 100px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 900px) {
+    .controls {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .viewbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-size-field {
+        width: 100%;
+    }
+}
+
+@media (max-width: 560px) {
+    .page-shell {
+        width: min(1200px, calc(100% - 1rem));
+        margin-top: 0.75rem;
+    }
+
+    .hero {
+        border-radius: 18px;
+    }
+
+    .journal-card {
+        min-height: 220px;
     }
 }

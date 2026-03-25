@@ -8,7 +8,7 @@
     <meta name="description" content="Journal targets for researchers, including frequency, accreditation, and APC information.">
     <meta name="author" content="Muhammad Davi">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#0f766e">
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Awesome Journal Targets">
@@ -24,55 +24,367 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="img/logo.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap4.min.css">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-<div class="container-fluid p-2">
-    <header class="pb-3 mb-3 border-bottom">
-        <!-- text title in the center -->
-        <h1 class="text-center">Awesome Journal Targets</h1>
-    </header>
+    <div class="page-shell">
+        <header class="hero">
+            <p class="hero-kicker">Publication Planning Directory</p>
+            <h1>Awesome Journal Targets</h1>
+            <p class="hero-subtitle">
+                Explore potential journals with frequency, accreditation, publication cost, and direct submission links in one place.
+            </p>
 
-        <table id="journal" class="table table-striped table-responsive-sm" style="width:100%">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Journal</th>
-                    <th>Frequency</th>
-                    <th>Accreditation</th>
-                    <th>Accreditation Exp</th>
-                    <th>Link</th>
-                    <th>APC (IDR/USD)</th>
-                </tr>
-            </thead>
-            <tfoot class="thead-dark">
-                <tr>
-                    <th>Journal</th>
-                    <th>Frequency</th>
-                    <th>Accreditation</th>
-                    <th>Accreditation Exp</th>
-                    <th>Link</th>
-                    <th>APC (IDR/USD)</th>
-                </tr>
-            </tfoot>
-        </table>
+            <div class="stats" id="statsBar">
+                <article class="stat">
+                    <span id="totalCount">0</span>
+                    <p>Total Journals</p>
+                </article>
+                <article class="stat">
+                    <span id="shownCount">0</span>
+                    <p>Currently Shown</p>
+                </article>
+                <article class="stat">
+                    <span id="accreditationCount">0</span>
+                    <p>Accreditation Groups</p>
+                </article>
+            </div>
+        </header>
+
+        <section class="controls" aria-label="Filter and sort journals">
+            <label class="field">
+                <span>Search Journal</span>
+                <input id="searchInput" type="search" placeholder="Type journal name, frequency, or publisher..." autocomplete="off">
+            </label>
+
+            <label class="field">
+                <span>Accreditation</span>
+                <select id="accreditationFilter">
+                    <option value="all">All Accreditation</option>
+                </select>
+            </label>
+
+            <label class="field">
+                <span>Sort By</span>
+                <select id="sortSelect">
+                    <option value="name-asc">Journal Name (A-Z)</option>
+                    <option value="name-desc">Journal Name (Z-A)</option>
+                    <option value="apc-asc">APC (Low to High)</option>
+                    <option value="apc-desc">APC (High to Low)</option>
+                </select>
+            </label>
+        </section>
+
+        <section class="viewbar" aria-label="View and page controls">
+            <div class="view-toggle" role="group" aria-label="Choose layout view">
+                <button type="button" class="view-btn is-active" data-view="card" id="cardViewBtn">Card View</button>
+                <button type="button" class="view-btn" data-view="table" id="tableViewBtn">Table View</button>
+            </div>
+
+            <label class="field page-size-field">
+                <span>Rows Per Page</span>
+                <select id="pageSizeSelect">
+                    <option value="6">6</option>
+                    <option value="9" selected>9</option>
+                    <option value="12">12</option>
+                    <option value="18">18</option>
+                </select>
+            </label>
+        </section>
+
+        <main>
+            <section id="journalList" class="journal-grid" aria-live="polite"></section>
+
+            <div id="journalTableWrap" class="table-wrap" hidden>
+                <table class="journal-table" aria-live="polite">
+                    <thead>
+                        <tr>
+                            <th>Journal</th>
+                            <th>Frequency</th>
+                            <th>Accreditation</th>
+                            <th>Accreditation Exp</th>
+                            <th>APC</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody id="journalTableBody"></tbody>
+                </table>
+            </div>
+
+            <nav id="pagination" class="pagination" aria-label="Journal pagination">
+                <button id="prevPageBtn" type="button">Previous</button>
+                <p id="pageMeta">Page 1 of 1</p>
+                <button id="nextPageBtn" type="button">Next</button>
+            </nav>
+
+            <p id="emptyState" class="empty-state" hidden>No journals match your current filters.</p>
+        </main>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-
     <script>
-        $(document).ready(function() {
-            $('#journal').DataTable({
-                ajax: 'dataset.json',
+        const searchInput = document.getElementById('searchInput');
+        const accreditationFilter = document.getElementById('accreditationFilter');
+        const sortSelect = document.getElementById('sortSelect');
+        const journalList = document.getElementById('journalList');
+        const journalTableWrap = document.getElementById('journalTableWrap');
+        const journalTableBody = document.getElementById('journalTableBody');
+        const pageSizeSelect = document.getElementById('pageSizeSelect');
+        const pageMeta = document.getElementById('pageMeta');
+        const pagination = document.getElementById('pagination');
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        const cardViewBtn = document.getElementById('cardViewBtn');
+        const tableViewBtn = document.getElementById('tableViewBtn');
+        const emptyState = document.getElementById('emptyState');
+        const totalCount = document.getElementById('totalCount');
+        const shownCount = document.getElementById('shownCount');
+        const accreditationCount = document.getElementById('accreditationCount');
+
+        let journals = [];
+        let filteredJournals = [];
+        let currentPage = 1;
+        let currentView = 'card';
+        let pageSize = Number(pageSizeSelect.value);
+
+        function extractLink(linkHtml) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(linkHtml, 'text/html');
+            const anchor = doc.querySelector('a');
+
+            if (!anchor) {
+                return { href: '#', text: 'Visit Journal' };
+            }
+
+            return {
+                href: anchor.getAttribute('href') || '#',
+                text: anchor.textContent.trim() || 'Visit Journal',
+            };
+        }
+
+        function parseApcValue(apc) {
+            const match = apc.replace(/,/g, '').match(/[0-9]+(?:\.[0-9]+)?/);
+            return match ? Number(match[0]) : Number.POSITIVE_INFINITY;
+        }
+
+        function normalizeRows(rows) {
+            return rows.map((row) => {
+                const link = extractLink(row[4]);
+                return {
+                    journal: row[0],
+                    frequency: row[1],
+                    accreditation: row[2],
+                    accreditationExp: row[3],
+                    link,
+                    apc: row[5],
+                    apcValue: parseApcValue(row[5]),
+                };
             });
+        }
+
+        function populateAccreditationFilter(items) {
+            const uniqueAccreditations = [...new Set(items.map((item) => item.accreditation))].sort((a, b) => a.localeCompare(b));
+
+            uniqueAccreditations.forEach((value) => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value;
+                accreditationFilter.appendChild(option);
+            });
+
+            accreditationCount.textContent = uniqueAccreditations.length;
+        }
+
+        function createCard(item) {
+            const article = document.createElement('article');
+            article.className = 'journal-card';
+
+            const title = document.createElement('h2');
+            title.textContent = item.journal;
+
+            const meta = document.createElement('p');
+            meta.className = 'meta';
+            meta.textContent = item.frequency;
+
+            const badges = document.createElement('div');
+            badges.className = 'badges';
+
+            const accreditationBadge = document.createElement('span');
+            accreditationBadge.className = 'badge accreditation';
+            accreditationBadge.textContent = item.accreditation;
+
+            const expBadge = document.createElement('span');
+            expBadge.className = 'badge expiry';
+            expBadge.textContent = item.accreditationExp;
+
+            badges.append(accreditationBadge, expBadge);
+
+            const footer = document.createElement('div');
+            footer.className = 'card-footer';
+
+            const apc = document.createElement('p');
+            apc.className = 'apc';
+            apc.innerHTML = `<span>APC</span> ${item.apc}`;
+
+            const link = document.createElement('a');
+            link.href = item.link.href;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.textContent = item.link.text;
+            link.className = 'journal-link';
+
+            footer.append(apc, link);
+            article.append(title, meta, badges, footer);
+
+            return article;
+        }
+
+        function createTableRow(item) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.journal}</td>
+                <td>${item.frequency}</td>
+                <td>${item.accreditation}</td>
+                <td>${item.accreditationExp}</td>
+                <td>${item.apc}</td>
+                <td><a href="${item.link.href}" target="_blank" rel="noopener noreferrer">${item.link.text}</a></td>
+            `;
+            return row;
+        }
+
+        function setView(viewName) {
+            currentView = viewName;
+            cardViewBtn.classList.toggle('is-active', currentView === 'card');
+            tableViewBtn.classList.toggle('is-active', currentView === 'table');
+            renderPage();
+        }
+
+        function updatePagination(totalItems) {
+            const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+            currentPage = Math.min(currentPage, totalPages);
+            pageMeta.textContent = `Page ${currentPage} of ${totalPages}`;
+            prevPageBtn.disabled = currentPage <= 1;
+            nextPageBtn.disabled = currentPage >= totalPages;
+            pagination.hidden = totalItems === 0;
+        }
+
+        function renderPage() {
+            const start = (currentPage - 1) * pageSize;
+            const pageItems = filteredJournals.slice(start, start + pageSize);
+
+            journalList.hidden = currentView !== 'card';
+            journalTableWrap.hidden = currentView !== 'table';
+            journalList.innerHTML = '';
+            journalTableBody.innerHTML = '';
+
+            if (pageItems.length === 0) {
+                emptyState.hidden = false;
+                pagination.hidden = true;
+                return;
+            }
+
+            emptyState.hidden = true;
+
+            if (currentView === 'card') {
+                const cardFragment = document.createDocumentFragment();
+                pageItems.forEach((item) => cardFragment.appendChild(createCard(item)));
+                journalList.appendChild(cardFragment);
+            } else {
+                const rowFragment = document.createDocumentFragment();
+                pageItems.forEach((item) => rowFragment.appendChild(createTableRow(item)));
+                journalTableBody.appendChild(rowFragment);
+            }
+        }
+
+        function filterAndSort() {
+            const keyword = searchInput.value.trim().toLowerCase();
+            const accreditation = accreditationFilter.value;
+            const sort = sortSelect.value;
+
+            let filtered = journals.filter((item) => {
+                const byAccreditation = accreditation === 'all' || item.accreditation === accreditation;
+                const haystack = `${item.journal} ${item.frequency} ${item.accreditation} ${item.accreditationExp} ${item.link.text}`.toLowerCase();
+                const byKeyword = keyword.length === 0 || haystack.includes(keyword);
+                return byAccreditation && byKeyword;
+            });
+
+            filtered = filtered.sort((a, b) => {
+                if (sort === 'name-asc') {
+                    return a.journal.localeCompare(b.journal);
+                }
+                if (sort === 'name-desc') {
+                    return b.journal.localeCompare(a.journal);
+                }
+                if (sort === 'apc-asc') {
+                    return a.apcValue - b.apcValue;
+                }
+                return b.apcValue - a.apcValue;
+            });
+
+            filteredJournals = filtered;
+            shownCount.textContent = filteredJournals.length;
+            currentPage = 1;
+            updatePagination(filteredJournals.length);
+            renderPage();
+        }
+
+        async function initialize() {
+            try {
+                if (window.location.protocol === 'file:') {
+                    emptyState.hidden = false;
+                    emptyState.innerHTML = 'Local file mode blocks data loading in browsers. Start a local server and open <code>http://localhost:8000</code>. Example command: <code>python3 -m http.server 8000</code>.';
+                    pagination.hidden = true;
+                    return;
+                }
+
+                const response = await fetch('dataset.json');
+                const result = await response.json();
+                journals = normalizeRows(result.data || []);
+
+                totalCount.textContent = journals.length;
+                shownCount.textContent = journals.length;
+                populateAccreditationFilter(journals);
+                filterAndSort();
+            } catch (error) {
+                emptyState.hidden = false;
+                emptyState.textContent = 'Failed to load journal data. Please refresh the page.';
+                console.error('Failed to load journals:', error);
+            }
+        }
+
+        searchInput.addEventListener('input', filterAndSort);
+        accreditationFilter.addEventListener('change', filterAndSort);
+        sortSelect.addEventListener('change', filterAndSort);
+        pageSizeSelect.addEventListener('change', () => {
+            pageSize = Number(pageSizeSelect.value);
+            currentPage = 1;
+            updatePagination(filteredJournals.length);
+            renderPage();
         });
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage -= 1;
+                updatePagination(filteredJournals.length);
+                renderPage();
+            }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            const totalPages = Math.max(1, Math.ceil(filteredJournals.length / pageSize));
+            if (currentPage < totalPages) {
+                currentPage += 1;
+                updatePagination(filteredJournals.length);
+                renderPage();
+            }
+        });
+
+        cardViewBtn.addEventListener('click', () => setView('card'));
+        tableViewBtn.addEventListener('click', () => setView('table'));
+
+        initialize();
     </script>
 </body>
 </html>
