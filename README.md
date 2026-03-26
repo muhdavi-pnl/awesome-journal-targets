@@ -29,14 +29,13 @@ Kontributor:
 [
   [
     "Journal Name",
-    "June, December",
-    "Sinta 2",
-    "2027 - Vol 10 No 2",
+    "Frequency",
+    "Accreditaion",
+    "Accreditation Exp",
     "<a href='https://example.com' target='_blank'>Website</a>",
-    "500,000",
+    "APC",
     "Publisher Name",
-    "Artificial Intelligence, Data Science",
-    "https://example.com/cover.png",
-    4
+    "Subject Area",
+    "https://example.com/cover.png"
   ]
 ]
