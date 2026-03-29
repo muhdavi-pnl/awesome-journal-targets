@@ -135,7 +135,7 @@ function isCoverUrl(value) {
         return false;
     }
     const trimmed = value.trim();
-    return /^https?:\/\//i.test(trimmed) && /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(trimmed);
+    return /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(trimmed);
 }
 
 function parseExtras(row) {
