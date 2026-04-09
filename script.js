@@ -99,9 +99,29 @@ function syncGridColumns() {
     journalList.classList.toggle('grid-three-columns', desktopColumnCount === 3);
 }
 
-function extractLink(linkHtml) {
+function extractLink(linkValue) {
+    const raw = String(linkValue || '').trim();
+    if (!raw) {
+        return { href: '#', text: 'Visit Journal' };
+    }
+
+    // Preferred dataset format: plain URL string.
+    if (!/<a\b/i.test(raw)) {
+        const href = /^https?:\/\//i.test(raw) ? raw : '#';
+        let text = 'Visit Journal';
+        if (href !== '#') {
+            try {
+                text = new URL(href).hostname.replace(/^www\./i, '');
+            } catch (error) {
+                text = 'Visit Journal';
+            }
+        }
+        return { href, text };
+    }
+
+    // Backward compatibility for older dataset entries using anchor HTML.
     const parser = new DOMParser();
-    const doc = parser.parseFromString(linkHtml, 'text/html');
+    const doc = parser.parseFromString(raw, 'text/html');
     const anchor = doc.querySelector('a');
 
     if (!anchor) {
